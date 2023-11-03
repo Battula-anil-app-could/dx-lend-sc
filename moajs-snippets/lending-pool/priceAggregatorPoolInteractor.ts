@@ -1,7 +1,7 @@
 import path from "path";
-import { AddressValue, BigIntValue, CodeMetadata, IAddress, Interaction, ResultsParser, ReturnCode, SmartContract, SmartContractAbi, TransactionWatcher } from "@dharitrinetwork/erdjs";
-import { INetworkConfig, INetworkProvider, ITestSession, ITestUser, loadAbiRegistry, loadCode } from "@dharitrinetwork/erdjs-snippets";
-import { NetworkConfig } from "@dharitrinetwork/erdjs-network-providers";
+import { AddressValue, BigIntValue, CodeMetadata, IAddress, Interaction, ResultsParser, ReturnCode, SmartContract, SmartContractAbi, TransactionWatcher } from "@dharitrinetwork/moajs";
+import { INetworkConfig, INetworkProvider, ITestSession, ITestUser, loadAbiRegistry, loadCode } from "@dharitrinetwork/moajs-snippets";
+import { NetworkConfig } from "@dharitrinetwork/moajs-network-providers";
 
 const PathToPriceAggregatorAbi = path.resolve(__dirname, "..", "..", "price_aggregator", "output", "price-aggregator.abi.json");
 const PathToPriceAggregator = path.resolve(__dirname, "..", "..", "price_aggregator", "output", "price-aggregator.wasm");

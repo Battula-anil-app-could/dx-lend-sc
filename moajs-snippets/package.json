@@ -7,9 +7,9 @@
         "compile": "tsc -p tsconfig.json"
     },
     "dependencies": {
-        "@dharitrinetwork/erdjs": "10.2.5",
-        "@dharitrinetwork/erdjs-network-providers": "0.1.5",
-        "@dharitrinetwork/erdjs-snippets": "3.0.2",
+        "@dharitrinetwork/moajs": "10.2.5",
+        "@dharitrinetwork/moajs-network-providers": "0.1.5",
+        "@dharitrinetwork/moajs-snippets": "3.0.2",
         "bignumber.js": "9.0.2"
     },
     "devDependencies": {

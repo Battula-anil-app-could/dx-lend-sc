@@ -1,5 +1,5 @@
-import { BigIntValue, TokenPayment } from "@dharitrinetwork/erdjs";
-import { createAirdropService, FiveMinutesInMilliseconds, createDCTInteractor, INetworkProvider, ITestSession, ITestUser, TestSession } from "@dharitrinetwork/erdjs-snippets";
+import { BigIntValue, TokenPayment } from "@dharitrinetwork/moajs";
+import { createAirdropService, FiveMinutesInMilliseconds, createDCTInteractor, INetworkProvider, ITestSession, ITestUser, TestSession } from "@dharitrinetwork/moajs-snippets";
 import { assert } from "chai";
 import { helperAddLiquidityPool, helperAirdropTokens, helperIssueBorrowToken, helperIssueLendToken, helperIssueToken, helperSetAggregatorForLP, helperSetAssetLiquidationBonus, helperSetAssetLoanToValue, helperSetBorrowRoles, helperSetLendRoles } from "./lendingPoolHelper";
 import { createLendingInteractor } from "./lendingPoolInteractor";

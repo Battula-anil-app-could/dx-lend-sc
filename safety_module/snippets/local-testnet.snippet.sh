@@ -8,11 +8,11 @@ BUSD_POOL="~/pems/carol.pem"
 BUSD_POOL_ADDRESS=0xb2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba
 
 
-ADDRESS=$(erdpy data load --key=address-testnet)
-BECH32_ADDRESS=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
+ADDRESS=$(moapy data load --key=address-testnet)
+BECH32_ADDRESS=moa1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruq0yu4wk
 
 DEPLOY_TRANSACTION=""
-ESTD_ISSUE_ADDRESS=erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+ESTD_ISSUE_ADDRESS=moa1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls29jpxv
 
 PROJECT="../../safety_module"
 
@@ -35,25 +35,25 @@ APY=30000000
 
 
 sendMOAXToContract(){
-    erdpy tx new --receiver ${ADDRESS} --value=1000000000000000000 --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueWMOAX.json" --arguments 0X574d4f4158 0X574d4f4158 100000 10 --send
+    moapy tx new --receiver ${ADDRESS} --value=1000000000000000000 --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueWMOAX.json" --arguments 0X574d4f4158 0X574d4f4158 100000 10 --send
 }
 
 issueWMOAX(){
-    erdpy contract call ${ESTD_ISSUE_ADDRESS} --value=5000000000000000000 --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueWMOAX.json" --arguments 0X574d4f4158 0X574d4f4158 100000 0x02 --send
+    moapy contract call ${ESTD_ISSUE_ADDRESS} --value=5000000000000000000 --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueWMOAX.json" --arguments 0X574d4f4158 0X574d4f4158 100000 0x02 --send
 }
 
 issueBUSD(){
-    erdpy contract call ${ESTD_ISSUE_ADDRESS} --value=5000000000000000000 --pem=${BUSD_POOL} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueBUSD.json" --arguments 0X42555344 0X42555344 100000 --send
+    moapy contract call ${ESTD_ISSUE_ADDRESS} --value=5000000000000000000 --pem=${BUSD_POOL} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=issue --outfile="issueBUSD.json" --arguments 0X42555344 0X42555344 100000 --send
 }
 
 deploy(){
-    erdpy contract deploy --project=${PROJECT} --pem=${ALICE} --arguments ${DCT_TICKER} ${APY} --proxy=${PROXY} --outfile="deploy.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID} --send || return
+    moapy contract deploy --project=${PROJECT} --pem=${ALICE} --arguments ${DCT_TICKER} ${APY} --proxy=${PROXY} --outfile="deploy.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID} --send || return
 
-    TRANSACTION=$(erdpy data parse --file="deploy.json" --expression="data['emitted_tx']['hash']")
-    ADDRESS=$(erdpy data parse --file="deploy.json" --expression="data['emitted_tx']['address']")
+    TRANSACTION=$(moapy data parse --file="deploy.json" --expression="data['emitted_tx']['hash']")
+    ADDRESS=$(moapy data parse --file="deploy.json" --expression="data['emitted_tx']['address']")
 
-    erdpy data store --key=address-testnet --value=${ADDRESS}
-    erdpy data store --key=deployTransaction-testnet --value=${TRANSACTION}
+    moapy data store --key=address-testnet --value=${ADDRESS}
+    moapy data store --key=deployTransaction-testnet --value=${TRANSACTION}
 
     echo ""
     echo "Smart contract address: ${ADDRESS}"
@@ -61,55 +61,55 @@ deploy(){
 }
 
 upgrade(){
-    erdpy contract upgrade ${ADDRESS} --metadata-payable --project=${PROJECT} --pem=${ALICE} --arguments ${DCT_TICKER} 30000000 --proxy=${PROXY} --outfile="upgrade.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID}
+    moapy contract upgrade ${ADDRESS} --metadata-payable --project=${PROJECT} --pem=${ALICE} --arguments ${DCT_TICKER} 30000000 --proxy=${PROXY} --outfile="upgrade.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID}
     echo ""
     echo "Smart contract address: ${ADDRESS}"
 }
 
 addPool(){
     echo "Smart contract address: ${ADDRESS}"
-    erdpy contract call ${ADDRESS} --value=0 --pem=${ALICE} --recall-nonce --gas-limit=100000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=addPool --outfile="addPool.json" --arguments ${DCT_BUSD_TICKER} ${BUSD_POOL_ADDRESS} --send
+    moapy contract call ${ADDRESS} --value=0 --pem=${ALICE} --recall-nonce --gas-limit=100000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=addPool --outfile="addPool.json" --arguments ${DCT_BUSD_TICKER} ${BUSD_POOL_ADDRESS} --send
 }
 
 removePool(){
     echo "Smart contract address: ${ADDRESS}"
-    erdpy contract call ${ADDRESS} --value=0 --pem=${ALICE} --recall-nonce --gas-limit=100000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=removePool --outfile="removePool.json" --arguments ${DCT_BUSD_TICKER} --send
+    moapy contract call ${ADDRESS} --value=0 --pem=${ALICE} --recall-nonce --gas-limit=100000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=removePool --outfile="removePool.json" --arguments ${DCT_BUSD_TICKER} --send
 }
 
 fundFromPool(){
-    erdpy contract call ${ADDRESS} --pem=${BUSD_POOL}  --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTTransfer --arguments ${DCT_BUSD_TICKER} 50015 0x66756e6446726f6d506f6f6c --send
+    moapy contract call ${ADDRESS} --pem=${BUSD_POOL}  --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTTransfer --arguments ${DCT_BUSD_TICKER} 50015 0x66756e6446726f6d506f6f6c --send
 }
 
 takeFunds(){
-    erdpy contract call ${ADDRESS} --pem=${BUSD_POOL}  --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=takeFunds --arguments ${DCT_BUSD_TICKER} 10010 --send
+    moapy contract call ${ADDRESS} --pem=${BUSD_POOL}  --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=takeFunds --arguments ${DCT_BUSD_TICKER} 10010 --send
 }
 
 NFTIssue(){
-    erdpy contract call ${ADDRESS} --function=nftIssue --pem=${ALICE} --value=5000000000000000000 --arguments 0x4e4654 0x4e4654 --proxy=${PROXY} --outfile="NFTIssue.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID} --send || return
+    moapy contract call ${ADDRESS} --function=nftIssue --pem=${ALICE} --value=5000000000000000000 --arguments 0x4e4654 0x4e4654 --proxy=${PROXY} --outfile="NFTIssue.json" --recall-nonce --send --gas-limit="600000000" --chain ${CHAIN_ID} --send || return
 }
 
 getNFTTokenInfo(){
-    erdpy contract query ${ADDRESS} --proxy=${PROXY} --function=nftToken
+    moapy contract query ${ADDRESS} --proxy=${PROXY} --function=nftToken
 }
 
 getWEGLTokenInfo(){
-    erdpy contract query ${ADDRESS} --proxy=${PROXY} --function=wmoax_token
+    moapy contract query ${ADDRESS} --proxy=${PROXY} --function=wmoax_token
 }
 
 addLocalRoles(){
-    erdpy contract call ${ADDRESS} --pem=${ALICE} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=setLocalRolesNftToken --arguments 0x03 0x04 0x05 --send
+    moapy contract call ${ADDRESS} --pem=${ALICE} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=setLocalRolesNftToken --arguments 0x03 0x04 0x05 --send
 }
 
 fund(){
-    erdpy contract call ${ADDRESS} --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTTransfer --arguments ${DCT_TICKER} 100000 0x66756e64 --send
+    moapy contract call ${ADDRESS} --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTTransfer --arguments ${DCT_TICKER} 100000 0x66756e64 --send
 }
 
 withdraw(){
-    erdpy contract call ${BECH32_ADDRESS} --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTNFTTransfer --arguments ${NFT_TICKER} 0x01 50000 0x000000000000000005004888d06daef6d4ce8a01d72812d08617b4b504a369e1 0x7769746864726177 --send
+    moapy contract call ${BECH32_ADDRESS} --pem=${BOB} --recall-nonce --gas-limit=1000000000 --proxy=${PROXY} --chain=${CHAIN_ID} --function=DCTNFTTransfer --arguments ${NFT_TICKER} 0x01 50000 0x000000000000000005004888d06daef6d4ce8a01d72812d08617b4b504a369e1 0x7769746864726177 --send
     echo ${ADDRESS}
     echo ${NFT_TICKER}
 }
 
 getLastError(){
-    erdpy contract query ${ADDRESS} --proxy=${PROXY} --function=lastErrorMessage
+    moapy contract query ${ADDRESS} --proxy=${PROXY} --function=lastErrorMessage
 }

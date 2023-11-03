@@ -1,5 +1,5 @@
-import { createAirdropService, createDCTInteractor, ITestSession, ITestUser } from "@dharitrinetwork/erdjs-snippets";
-import { TokenPayment } from "@dharitrinetwork/erdjs/out";
+import { createAirdropService, createDCTInteractor, ITestSession, ITestUser } from "@dharitrinetwork/moajs-snippets";
+import { TokenPayment } from "@dharitrinetwork/moajs/out";
 import { createLendingInteractor } from "./lendingPoolInteractor";
 
 
